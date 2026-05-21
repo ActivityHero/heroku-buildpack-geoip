@@ -2,7 +2,7 @@
 
 BUILD_DIR=$1
 CACHE_DIR=$2
-ENV_FILE=$3
+ENV_DIR=$3
 
 PROFILE_PATH="$BUILD_DIR/.profile.d/geoip.sh"
 set-env() {
@@ -21,7 +21,15 @@ GEOIP_DIST_DIR="GeoIP-$GEOIP_VERSION"
 
 # GEOLITECITY_URL="http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz"
 # GEOLITECITY_URL="https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&date=20200218&license_key=dikZSWeHbD4fbAR8&suffix=tar.gz"
-GEOLITECITY_URL="https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=dikZSWeHbD4fbAR8&suffix=tar.gz"
+GEOLITECITY_MAXMIND_URL="https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=dikZSWeHbD4fbAR8&suffix=tar.gz"
+
+if [ -f "$ENV_DIR/GEOLITECITY_INTERNAL_URL" ]; then
+    GEOLITECITY_URL=$(cat "$ENV_DIR/GEOLITECITY_INTERNAL_URL")
+    echo "Using internal GeoLite2-City URL (non-production)"
+else
+    GEOLITECITY_URL="$GEOLITECITY_MAXMIND_URL"
+    echo "Using MaxMind GeoLite2-City URL (production)"
+fi
 GEOLITECITY_FILE="GeoLite2-City.mmdb"
 
 # echo "-------- CACHE_DIR = $CACHE_DIR BUILD_DIR = $BUILD_DIR"
